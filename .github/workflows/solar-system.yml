@@ -46,5 +46,6 @@ jobs:
         - name: Archive Test Result
           uses: actions/upload-artifact@v4
           with:
-            name: solarapp test results
+            name: solarapp-test-results-${{ matrix.os }}
             path: test-results.xml
+            overwrite: true
