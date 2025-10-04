@@ -120,6 +120,8 @@ jobs:
             context: .
             push: false
             tags: hafiszaman/solar-system:${{ github.sha }}
+            file: ./Dockerfile
+
 
         - name: Docker Image Test
           run: |
