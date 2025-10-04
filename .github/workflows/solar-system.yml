@@ -58,6 +58,7 @@ jobs:
             name: solarapp-test-results-${{ github.run_id }}-${{ matrix.os }}
             path: test-results.xml
             retention-days: 1
+            overwrite: true
 
     CodeCoverage:
       name: Code Coverage
