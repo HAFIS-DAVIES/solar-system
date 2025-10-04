@@ -23,11 +23,11 @@ jobs:
         - name: Install Dependencies
           run: npm install
     
-        - name: Unit Testing
+        - name: Unit Testing of Solar System
           run: npm test
           
-        - name: Archive Test Result
-          uses: actions/upload-artifact@v3
-          with:
-            name: Mocha-Test-Result
-            path: test-results.xml
+        # - name: Archive Test Result
+        #   uses: actions/upload-artifact@v3
+        #   with:
+        #     name: Mocha-Test-Result
+        #     path: test-results.xml
