@@ -55,7 +55,7 @@ jobs:
           if: always()
           uses: actions/upload-artifact@v4
           with:
-            name: solarapp-test-results--${{ matrix.os }}-${{ github.run_id }}
+            name: solarapp-test-results--${{ matrix.os }}-${{ matrix.node-version }}-${{ github.run_id }}
             path: test-results.xml
             retention-days: 1
             overwrite: true
@@ -92,7 +92,7 @@ jobs:
         - name: Archive Coverage Report
           uses: actions/upload-artifact@v4
           with:
-            name: solarapp-coverage-report-${{ github.run_id }}-${{ matrix.os }}
+            name: solarapp-coverage-report-${{ github.run_id }}-${{ matrix.node-version }}-${{ matrix.os }}
             path: coverage
             retention-days: 1
             overwrite: true
