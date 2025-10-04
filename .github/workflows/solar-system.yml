@@ -114,14 +114,23 @@ jobs:
       needs: [DockerAuthentication]
       runs-on: ubuntu-latest
       steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Verify Dockerfile presence
+          run: |
+            echo "Listing workspace contents:"
+            ls -la
+            echo "Checking for Dockerfile:"
+            find . -maxdepth 2 -type f -name "Dockerfile"
+
         - name: Build Docker Image
           uses: docker/build-push-action@v6
           with:
             context: .
+            file: ./Dockerfile      # change if your Dockerfile is in subfolder (e.g. ./src/Dockerfile)
             push: false
             tags: hafiszaman/solar-system:${{ github.sha }}
-            file: ./Dockerfile
-
 
         - name: Docker Image Test
           run: |
