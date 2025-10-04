@@ -46,7 +46,7 @@ jobs:
         - name: Archive Test Result
           uses: actions/upload-artifact@v4
           with:
-            name: solarapp-test-results-${{ matrix.os }}
+            name: solarapp-test-results-${{ github.run_id }}-${{ matrix.os }}
             path: test-results.xml
             overwrite: true
             retention-days: 1
@@ -77,7 +77,7 @@ jobs:
         - name: Archive Coverage Report
           uses: actions/upload-artifact@v4
           with:
-            name: solarapp-coverage-report-${{ matrix.os }}
-            path: coverage/
+            name: solarapp-coverage-report-${{ github.run_id }}-${{ matrix.os }}
+            path: coverage
             retention-days: 1
             overwrite: true
