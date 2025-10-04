@@ -145,6 +145,6 @@ jobs:
             echo "Container IP Address: $IP"
 
             # Test the application endpoint
-            echo Testing the Health Endpoint...
-            wget -q -O - $IP:3000/live | grep "live"
-            echo Health Endpoint is Working.
+            echo "Testing the Health Endpoint..."
+            wget -q -O - 127.0.0.1:3000/live | grep live
+            echo "Health Endpoint is Working."
