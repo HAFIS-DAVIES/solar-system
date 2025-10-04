@@ -153,11 +153,5 @@ jobs:
             docker rm solar-system-app
 
         - name: Push Docker Image to Hub
-          uses: docker/build-push-action@v6
-          with:
-            context: .
-            file: ./Dockerfile
-            push: true
-            tags: |
-              ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
-              ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
+          run: |
+            docker push ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
