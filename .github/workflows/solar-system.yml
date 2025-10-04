@@ -148,3 +148,19 @@ jobs:
             echo "Testing the Health Endpoint..."
             wget -q -O - 127.0.0.1:3000/live | grep live
             echo "Health Endpoint is Working."
+
+        - name: Clean up Docker Container
+          if: always()
+          run: |
+            docker stop solar-system-app
+            docker rm solar-system-app
+
+    DockerPush:
+      name: Docker Push
+      needs: [DockerBuild]
+      runs-on: ubuntu-latest
+      steps:
+        - name: Push Docker Image
+          run: |
+            docker images
+            docker push hafiszaman/solar-system:${{ github.sha }}
