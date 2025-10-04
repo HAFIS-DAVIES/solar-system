@@ -49,3 +49,34 @@ jobs:
             name: solarapp-test-results-${{ matrix.os }}
             path: test-results.xml
             overwrite: true
+            retention-days: 1
+
+
+    CodeCovrerage:
+      name: Code Coverage
+      strategy:
+        matrix:
+          os: [ubuntu-latest, macos-latest]
+      runs-on: ${{ matrix.os }}
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4
+
+        - name: Setup NodeJS Version
+          uses: actions/setup-node@v3
+          with:
+            node-version: 20
+
+        - name: Install Dependencies
+          run: npm ci
+
+        - name: Check Code Coverage
+          run: npm run coverage
+
+        - name: Archive Coverage Report
+          uses: actions/upload-artifact@v4
+          with:
+            name: solarapp-coverage-report-${{ matrix.os }}
+            path: coverage/
+            retention-days: 1
+            overwrite: true
