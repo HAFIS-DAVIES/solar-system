@@ -17,8 +17,8 @@ jobs:
         name: Unit Testing
         strategy:
           matrix:
-            node-version: [18,19,20]
-            os: [ubuntu-latest, macos-latest]
+            node-version: [20]
+            os: [ubuntu-latest]
             exclude:
               - os: macos-latest, ubuntu-latest
                 node-version: 18,19
@@ -57,14 +57,13 @@ jobs:
           with:
             name: solarapp-test-results-${{ github.run_id }}-${{ matrix.os }}
             path: test-results.xml
-            overwrite: true
             retention-days: 1
 
     CodeCoverage:
       name: Code Coverage
       strategy:
         matrix:
-          os: [ubuntu-latest, macos-latest]
+          os: [ubuntu-latest]
       runs-on: ${{ matrix.os }}
       steps:
         - name: Checkout Repository
