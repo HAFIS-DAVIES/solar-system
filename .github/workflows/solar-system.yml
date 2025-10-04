@@ -149,11 +149,14 @@ jobs:
             wget -q -O - 127.0.0.1:3000/live | grep live
             echo "Health Endpoint is Working."
 
-        - name: Docker Push
+            docker stop solar-system-app
+            docker rm solar-system-app
+
+        - name: Push Docker Image to Hub
           uses: docker/build-push-action@v6
           with:
             context: .
-            file: ./Dockerfile      # change if your Dockerfile is in subfolder (e.g. ./src/Dockerfile)
+            file: ./Dockerfile
             push: true
             tags: |
               ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
