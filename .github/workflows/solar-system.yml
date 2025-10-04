@@ -55,14 +55,13 @@ jobs:
           if: always()
           uses: actions/upload-artifact@v4
           with:
-            name: solarapp-test-results-${{ github.run_id }}-${{ matrix.os }}
+            name: solarapp-test-results--${{ matrix.os }}-${{ github.run_id }}
             path: test-results.xml
             retention-days: 1
             overwrite: true
 
     CodeCoverage:
       name: Code Coverage
-      needs: [unit-testing]
       strategy:
         matrix:
           os: [ubuntu-latest]
@@ -100,7 +99,7 @@ jobs:
 
     DockerAuthentication:
       name: Docker Authentication
-      needs: [CodeCoverage]
+      needs: [CodeCoverage , unit-testing]
       runs-on: ubuntu-latest
       steps:
         - name: Login to Docker Hub
