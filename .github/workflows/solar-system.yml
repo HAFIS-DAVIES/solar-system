@@ -108,17 +108,6 @@ jobs:
             username: ${{ vars.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-        - name: Reset Docker config
-          run: rm -f ~/.docker/config.json || true
-
-
-        - name: Login to GitHub Container Registry
-          uses: docker/login-action@v3
-          with:
-            registry: ghcr.io
-            username: ${{ github.repository_owner }}
-            password: ${{ secrets.GITHUB_TOKEN }}
-
         - name: Verify login
           run: |
             echo "Docker info:"
@@ -127,23 +116,38 @@ jobs:
             cat ~/.docker/config.json || true  
 
     DockerBuild:
-      name: Build and Push Images
+      name: Build and Push to Docker Hub
       runs-on: ubuntu-latest
       needs: DockerAuthentication
       steps:
         - uses: actions/checkout@v4
+
+        # Clean up any cached Docker auth
+        - name: Reset Docker config
+          run: rm -f ~/.docker/config.json || true
+
+        - name: Login to Docker Hub
+          uses: docker/login-action@v3
+          with:
+            username: ${{ vars.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+        - name: Verify login
+          run: |
+            echo "Expect Username: ${{ vars.DOCKERHUB_USERNAME }}"
+            docker info | grep Username || true
+            echo "Auth file content:"
+            cat ~/.docker/config.json
+
         - name: Build and Push image
           uses: docker/build-push-action@v6
           with:
             context: .
             file: ./Dockerfile
-            push: false
+            push: true
             tags: |
               ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
               ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
-              ghcr.io/hafis-davies/solar-system:latest
-              ghcr.io/hafis-davies/solar-system:${{ github.sha }}
-
         - name: Docker Image Test
           run: |
             docker images
@@ -153,7 +157,6 @@ jobs:
               -e MONGO_USERNAME=$MONGO_USERNAME \
               -e MONGO_PASSWORD=$MONGO_PASSWORD \
               ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
-         
 
             export IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' solar-system-app)
             echo "Container IP Address: $IP"
@@ -163,14 +166,9 @@ jobs:
             wget -q -O - 127.0.0.1:3000/live | grep live
             echo "Health Endpoints is Working."
 
-        - name: Container Registry Image Push
+        - name: Docker Push
           run: |
-            docker push olayiwola1/solar-system:latest
-            docker push olayiwola1/solar-system:${{ github.sha }}
-            docker push ghcr.io/hafis-davies/solar-system:latest
-            docker push ghcr.io/hafis-davies/solar-system:${{ github.sha }}
+            docker push ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
+            docker push ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
 
 
-     
-
-       
