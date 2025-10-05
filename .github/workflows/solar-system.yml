@@ -163,16 +163,12 @@ jobs:
             wget -q -O - 127.0.0.1:3000/live | grep live
             echo "Health Endpoints is Working."
 
-        - name: Container Registry Push
-          uses: docker/build-push-action@v6
-          with:
-            context: .
-            push: true
-            tags: |
-              ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
-              ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
-              ghcr.io/hafis-davies/solar-system:latest
-              ghcr.io/hafis-davies/solar-system:${{ github.sha }}
+        - name: Container Registry Image Push
+          run: |
+            docker push ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
+            docker push ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
+            docker push ghcr.io/hafis-davies/solar-system:latest
+            docker push ghcr.io/hafis-davies/solar-system:${{ github.sha }}
 
 
      
