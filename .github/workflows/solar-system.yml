@@ -109,7 +109,11 @@ jobs:
             password: ${{ secrets.DOCKERHUB_TOKEN }}
 
         - name: Verify login
-          run: docker info | grep Username     
+          run: |
+            echo "Docker info:"
+            docker info | grep Username || true
+            echo "Docker Hub credentials:"
+            cat ~/.docker/config.json || true  
 
     DockerBuild:
       name: Docker Build and Test
