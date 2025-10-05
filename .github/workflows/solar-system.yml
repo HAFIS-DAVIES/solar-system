@@ -116,27 +116,39 @@ jobs:
             cat ~/.docker/config.json || true  
 
     DockerBuild:
-      name: Docker Build and Test
-      needs: [DockerAuthentication]
+      name: Build and Push to Docker Hub
       runs-on: ubuntu-latest
+
       steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
+        - uses: actions/checkout@v4
 
-        - name: Verify Dockerfile presence
+        # Clean up any cached Docker auth
+        - name: Reset Docker config
+          run: rm -f ~/.docker/config.json || true
+
+        - name: Login to Docker Hub
+          uses: docker/login-action@v3
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+        - name: Verify login
           run: |
-            echo "Listing workspace contents:"
-            ls -la
-            echo "Checking for Dockerfile:"
-            find . -maxdepth 2 -type f -name "Dockerfile"
+            echo "Expect Username: ${{ secrets.DOCKERHUB_USERNAME }}"
+            docker info | grep Username || true
+            echo "Auth file content:"
+            cat ~/.docker/config.json
 
-        - name: Build Docker Image
+        - name: Build and Push image
           uses: docker/build-push-action@v6
           with:
             context: .
-            file: ./Dockerfile      # change if your Dockerfile is in subfolder (e.g. ./src/Dockerfile)
-            push: false
-            tags: ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
+            file: ./Dockerfile
+            push: true
+            tags: |
+              ${{ secrets.DOCKERHUB_USERNAME }}/solar-system:latest
+              ${{ secrets.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
+
 
               
 
