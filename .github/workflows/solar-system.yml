@@ -153,10 +153,12 @@ jobs:
           with:
             context: .
             file: ./Dockerfile
-            push: true
+            push: false
             tags: |
               ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
               ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
+              ghcr.io/hafis-davies/solar-system:latest
+              ghcr.io/hafis-davies/solar-system:${{ github.sha }}
         - name: Docker Image Test
           run: |
             docker images
