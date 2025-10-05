@@ -106,7 +106,10 @@ jobs:
           uses: docker/login-action@v3
           with:
             username: ${{ vars.DOCKERHUB_USERNAME }}
-            password: ${{ secrets.DOCKERHUB_PASSWORD }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+        - name: Verify login
+          run: docker info | grep Username     
 
     DockerBuild:
       name: Docker Build and Test
@@ -128,7 +131,7 @@ jobs:
           with:
             context: .
             file: ./Dockerfile      # change if your Dockerfile is in subfolder (e.g. ./src/Dockerfile)
-            push: true
+            push: false
             tags: ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
 
         - name: Docker Image Test
@@ -148,15 +151,10 @@ jobs:
             echo "Testing the Health Endpoint..."
             wget -q -O - 127.0.0.1:3000/live | grep live
             echo "Health Endpoint is Working."
-
-            docker stop solar-system-app
-            docker rm solar-system-app
-
-        # - name: Docker Push
-        #   needs: DockerBuild
-        #   uses: docker/build-push-action@v6
-        #   with:
-        #     context: .
-        #     file: ./Dockerfile      # change if your Dockerfile is in subfolder (e.g. ./src/Dockerfile)
-        #     push: true
-        #     tags: ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
+        - name: Docker Push
+          uses: docker/build-push-action@v6
+          with:
+            context: .
+            file: ./Dockerfile      # change if your Dockerfile is in subfolder (e.g. ./src/Dockerfile)
+            push: true
+            tags: ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
