@@ -225,7 +225,7 @@ jobs:
           run: |
             kubectl version
             echo ------------------------------------------------
-            kubectl get nodes -o wide
+            kubectl get nodes
             kubectl get pods --all-namespaces
             kubectl get svc --all-namespaces
 
