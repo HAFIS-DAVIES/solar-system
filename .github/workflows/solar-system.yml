@@ -215,12 +215,13 @@ jobs:
           with:
             version: 'latest'
 
-        - name: Set up kubeconfig
+        - name: Configure kubeconfig
           run: |
-            mkdir -p ~/.kube
-            echo "${{ secrets.KUBECONFIG }} | base64 --decode > ~/.kube/config
-            chmod 600 ~/.kube/config
-            kubectl cluster-info
+              mkdir -p ~/.kube
+              echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > ~/.kube/config
+              chmod 600 ~/.kube/config
+              kubectl cluster-info
+              kubectl get nodes
 
 
         - name: Verify Kubernetes connection
