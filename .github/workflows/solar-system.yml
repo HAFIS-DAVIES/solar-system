@@ -132,6 +132,13 @@ jobs:
             username: ${{ vars.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+        - name: Login to GitHub Container Registry
+          uses: docker/login-action@v3
+          with:
+            registry: ghcr.io
+            username: ${{ github.repository_owner }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
         - name: Verify login
           run: |
             echo "Expect Username: ${{ vars.DOCKERHUB_USERNAME }}"
@@ -170,5 +177,7 @@ jobs:
           run: |
             docker push ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
             docker push ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
+            docker push ghcr.io/hafis-davies/solar-system:latest
+            docker push ghcr.io/hafis-davies/solar-system:${{ github.sha }}
 
 
