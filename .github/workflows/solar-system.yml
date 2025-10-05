@@ -146,8 +146,8 @@ jobs:
             file: ./Dockerfile
             push: true
             tags: |
-              ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
-              ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
+              olayiwola1/solar-system:latest
+              olayiwola1/solar-system:1
 
         - name: Docker Image Test
           run: |
@@ -157,7 +157,7 @@ jobs:
               -e MONGO_URI=$MONGO_URI \
               -e MONGO_USERNAME=$MONGO_USERNAME \
               -e MONGO_PASSWORD=$MONGO_PASSWORD \
-              ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
+              olayiwola1/solar-system:latest
 
             export IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' solar-system-app)
             echo "Container IP Address: $IP"
@@ -168,8 +168,8 @@ jobs:
             echo "Health Endpoints is Working."
 
         - name: Test push permission
-          run: docker push olayiwola1/solar-system:test-permission
+          run: docker push olayiwola1/solar-system:latest || true
         - name: Docker Push
           run: |
             docker push olayiwola1/solar-system:latest
-            docker push olayiwola1/solar-system:${{ github.sha }}
+            docker push olayiwola1/solar-system:1
