@@ -141,8 +141,8 @@ jobs:
             tags: |
               ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
               ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
-              ghcr.io/${{ github.repository_owner }}/solar-system:latest
-              ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
+              ghcr.io/hafis-davies/solar-system:latest
+              ghcr.io/hafis-davies/solar-system:${{ github.sha }}
 
         - name: Docker Image Test
           run: |
@@ -171,8 +171,8 @@ jobs:
             tags: |
               ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
               ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
-              ghcr.io/${{ github.repository_owner }}/solar-system:latest
-              ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
+              ghcr.io/hafis-davies/solar-system:latest
+              ghcr.io/hafis-davies/solar-system:${{ github.sha }}
 
 
      
