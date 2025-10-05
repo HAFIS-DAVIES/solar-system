@@ -165,8 +165,8 @@ jobs:
 
         - name: Container Registry Image Push
           run: |
-            docker push ${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest
-            docker push ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
+            docker push olayiwola1/solar-system:latest
+            docker push olayiwola1/solar-system:${{ github.sha }}
             docker push ghcr.io/hafis-davies/solar-system:latest
             docker push ghcr.io/hafis-davies/solar-system:${{ github.sha }}
 
