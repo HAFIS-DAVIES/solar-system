@@ -247,3 +247,22 @@ jobs:
       - name: Check files
         run: |
           cat kubernetes/development/*.yaml
+
+      - name: Create MongoDB Secret
+        run: |
+          kubectl -n ${{ vars.NAMESPACE_DEV }} create secret generic mongo-secret \
+            --from-literal=MONGO_URI=${{ env.MONGO_URI }} \
+            --from-literal=MONGO_USERNAME=${{ vars.MONGO_USERNAME }} \
+            --from-literal=MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }} \
+            -- save-config --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Deploy to Dev Env
+        run: |
+          kubectl apply -f kubernetes/development/
+          kubectl get all -n ${{ vars.NAMESPACE_DEV }}
+          kubectl -n ${{ vars.NAMESPACE_DEV }} rollout status deployment/solar-system-deployment
+          echo "Waiting for 60 seconds to allow the application to stabilize..."
+          sleep 60
+          echo "Testing the Health Endpoint..."
+          wget -q -O - http://$INGRESS_IP/live | grep live
+          echo "Health Endpoints is Working."
