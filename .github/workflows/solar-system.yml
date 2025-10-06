@@ -265,7 +265,7 @@ jobs:
 
           # Replace placeholders
           sed -i "s|_{_NAMESPACE_}_|development|g" kubernetes/development/*.yaml
-          sed -i "s|_{_REPLICAS_}_|1g" kubernetes/development/*.yaml
+          sed -i "s|_{_REPLICAS_}_|1|" kubernetes/development/*.yaml
           sed -i "s|_{_IMAGE_}_|${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}|g" kubernetes/development/*.yaml
           sed -i "s|_{_INGRESS_IP_}_|$INGRESS_IP|g" kubernetes/development/*.yaml
 
