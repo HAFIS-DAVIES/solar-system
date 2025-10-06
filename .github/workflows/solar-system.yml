@@ -238,7 +238,7 @@ jobs:
         with:
           files: |
             kubernetes/development/*.yaml
-          replacements: |
+          env: |
             NAMESPACE: ${{ vars.NAMESPACE_DEV }}
             REPLICAS: ${{ vars.REPLICAS }}
             IMAGE: '${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest'
