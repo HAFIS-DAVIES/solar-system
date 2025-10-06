@@ -272,4 +272,5 @@ jobs:
           # Apply resources
           kubectl apply -f kubernetes/development -n development
           kubectl get all -n development
+          kubectl get ingress -n development
           
