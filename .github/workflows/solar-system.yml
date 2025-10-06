@@ -274,3 +274,10 @@ jobs:
           kubectl get all -n development
           kubectl get ingress -n development
           
+      - name: Integration Test
+        run: |
+          echo "Waiting for 60 seconds to allow the application to stabilize..."
+          sleep 60
+          echo "Testing the Health Endpoint..."
+          wget -q -O - http://solar-system-development.$INGRESS_IP.nip.io/live | grep live
+          echo "Health Endpoint is Working."
