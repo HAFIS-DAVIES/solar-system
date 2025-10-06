@@ -257,9 +257,11 @@ jobs:
             --from-literal=MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }} \
             --save-config --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Deploy to Dev Env
+      - name: Apply Kubernetes Manifests
         run: |
-          kubectl apply -f kubernetes/development
-          echo "Waiting for 30 seconds to allow resources to be created..."
-          kubectl get all -n ${{ vars.NAMESPACE_DEV }}
+          # Replace placeholders with actual values
+          sed -i "s|_{_NAMESPACE_}_|${{ vars.NAMESPACE_DEV }}|g" kubernetes/development/*.yaml
+          sed -i "s|_{_REPLICAS_}_|${{ vars.REPLICAS }}|g" kubernetes/development/*.yaml
+          sed -i "s|_{_IMAGE_}_|${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest|g" kubernetes/development/*.yaml
+
           
