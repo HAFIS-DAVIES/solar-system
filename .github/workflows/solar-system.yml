@@ -257,11 +257,19 @@ jobs:
             --from-literal=MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }} \
             --save-config --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Apply Kubernetes Manifests
+      - name: Replace placeholders and deploy
         run: |
-          # Replace placeholders with actual values
-          sed -i "s|_{_NAMESPACE_}_|${{ vars.NAMESPACE_DEV }}|g" kubernetes/development/*.yaml
-          sed -i "s|_{_REPLICAS_}_|1|g" kubernetes/development/*.yaml
-          sed -i "s|_{_IMAGE_}_|${{ vars.DOCKERHUB_USERNAME }}/solar-system:latest|g" kubernetes/development/*.yaml
-          kubectl apply -f kubernetes/development/
+          # Discover ingress IP (for kind/minikube clusters)
+          export INGRESS_IP=$(kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null || echo "127.0.0.1")
+          echo "Using INGRESS_IP: $INGRESS_IP"
+
+          # Replace placeholders
+          sed -i "s|_{_NAMESPACE_}_|development|g" kubernetes/development/*.yaml
+          sed -i "s|_{_REPLICAS_}_|1g" kubernetes/development/*.yaml
+          sed -i "s|_{_IMAGE_}_|${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}|g" kubernetes/development/*.yaml
+          sed -i "s|_{_INGRESS_IP_}_|$INGRESS_IP|g" kubernetes/development/*.yaml
+
+          # Apply resources
+          kubectl apply -f kubernetes/development -n development
+          kubectl get all -n development
           
