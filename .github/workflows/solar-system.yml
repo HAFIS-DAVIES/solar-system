@@ -215,17 +215,18 @@ jobs:
           with:
             version: 'latest'
 
-        - name: Configure Kubeconfig
+        - name: Setup kubeconfig (raw)
           run: |
             mkdir -p ~/.kube
-            echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > ~/.kube/config
+            cat <<'EOF' > ~/.kube/config
+            ${{ secrets.KUBECONFIG_RAW }}
+            EOF
             chmod 600 ~/.kube/config
-            kubectl cluster-info
 
-        - name: Verify Kubernetes connection
+        - name: Test Kubernetes access
           run: |
-            kubectl config view
             kubectl cluster-info
+            kubectl get pods --all-namespaces
 
 
         - name: Fetch Kubernetes Cluster Details
