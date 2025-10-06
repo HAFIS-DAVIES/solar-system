@@ -250,7 +250,7 @@ jobs:
 
       - name: Create MongoDB Secret
         run: |
-          kubectl get ns development || kubectl create ns development
+          kubectl create ns development
           kubectl -n ${{ vars.NAMESPACE_DEV }} create secret generic mongo-secret \
             --from-literal=MONGO_URI=${{ env.MONGO_URI }} \
             --from-literal=MONGO_USERNAME=${{ vars.MONGO_USERNAME }} \
@@ -259,7 +259,7 @@ jobs:
 
       - name: Deploy to Dev Env
         run: |
-          kubectl apply -f kubernetes/development/*.yaml
+          kubectl apply -f kubernetes/development
           echo "Waiting for 30 seconds to allow resources to be created..."
           kubectl get all -n ${{ vars.NAMESPACE_DEV }}
           
