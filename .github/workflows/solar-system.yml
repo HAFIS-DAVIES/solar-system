@@ -213,28 +213,13 @@ jobs:
         - name: kubectl installation
           uses: azure/setup-kubectl@v3
           with:
-            version: 'latest'
-
-        - name: Setup kubeconfig (raw)
-          run: |
-            mkdir -p ~/.kube
-            cat <<'EOF' > ~/.kube/config
-            ${{ secrets.KUBECONFIG_DATA }}
-            EOF
-            chmod 600 ~/.kube/config
-
-        - name: Test Kubernetes access
-          run: |
-            kubectl cluster-info
-            kubectl get pods --all-namespaces
-
+            version: 'v1.26.0'
 
         - name: Fetch Kubernetes Cluster Details
           run: |
             kubectl version
             echo ------------------------------------------------
             kubectl get nodes
-            kubectl get pods --all-namespaces
-            kubectl get svc --all-namespaces
+            
 
 
